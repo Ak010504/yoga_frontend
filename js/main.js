@@ -342,7 +342,7 @@ function displayResults(result) {
 
             item.innerHTML = `
                 <div class="feedback-header">
-                    <span>Frame ${index + 1} / 10</span>
+                    <span>Frame ${index + 1}</span>
                     <span class="feedback-timestamp">${timestamp}</span>
                 </div>
                 <div class="feedback-text">${fb.feedback || 'Analysis complete'}</div>
