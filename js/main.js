@@ -1,7 +1,7 @@
 // Global state
 const state = {
     selectedPose: null,
-    backendURL: 'https://nonculminating-conductible-francina.ngrok-free.dev',
+    backendURL: 'http://localhost:8000',
     recordedBlob: null,
     mediaRecorder: null,
     recordingStartTime: null,
