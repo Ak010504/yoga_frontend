@@ -180,7 +180,13 @@ async function loadPoses() {
   try {
     const API_BASE = "https://irresponsible-inga-semiallegorically.ngrok-free.dev";
 
-    const res = await fetch( `${API_BASE}/api/poses`);
+    const res = await fetch( `${API_BASE}/api/poses`,
+      {
+    headers: {
+      "ngrok-skip-browser-warning": "true"
+    }
+  }
+    );
 
     console.log("Status:", res.status);
     console.log("Content-Type:", res.headers.get("content-type"));
@@ -304,7 +310,10 @@ async function analyzeRecordedVideo() {
     const API_BASE = "https://irresponsible-inga-semiallegorically.ngrok-free.dev";
     const res = await fetch(`${API_BASE}/api/process-video`, {
       method: "POST",
-      body: formData
+      body: formData,
+      headers: {
+      "ngrok-skip-browser-warning": "true"
+    }
     });
 
     const result = await res.json();
