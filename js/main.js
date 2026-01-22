@@ -177,7 +177,7 @@ function renderLiveFeedback(feedbackArray) {
 // Pose Dropdown Init
 // -------------------------------
 async function loadPoses() {
-  const res = await fetch("http://localhost:8000/api/poses");
+  const res = await fetch("https://irresponsible-inga-semiallegorically.ngrok-free.dev/api/poses");
   const data = await res.json();
 
   data.poses.forEach(pose => {
@@ -286,7 +286,7 @@ async function analyzeRecordedVideo() {
   formData.append("pose", selectedPose);
 
   try {
-    const res = await fetch("http://localhost:8000/api/process-video", {
+    const res = await fetch("https://irresponsible-inga-semiallegorically.ngrok-free.dev/api/process-video", {
       method: "POST",
       body: formData
     });
