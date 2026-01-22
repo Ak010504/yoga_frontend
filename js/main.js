@@ -178,10 +178,9 @@ function renderLiveFeedback(feedbackArray) {
 // -------------------------------
 async function loadPoses() {
   try {
-    const url = "https://irresponsible-inga-semiallegorically.ngrok-free.dev/api/poses";
-    console.log("Fetching poses from:", url);
+    const API_BASE = "https://irresponsible-inga-semiallegorically.ngrok-free.dev";
 
-    const res = await fetch(url);
+    const res = await fetch( `${API_BASE}/api/poses`);
 
     console.log("Status:", res.status);
     console.log("Content-Type:", res.headers.get("content-type"));
@@ -302,7 +301,8 @@ async function analyzeRecordedVideo() {
   formData.append("pose", selectedPose);
 
   try {
-    const res = await fetch("https://irresponsible-inga-semiallegorically.ngrok-free.dev/api/process-video", {
+    const API_BASE = "https://irresponsible-inga-semiallegorically.ngrok-free.dev";
+    const res = await fetch(`${API_BASE}/api/process-video`, {
       method: "POST",
       body: formData
     });
