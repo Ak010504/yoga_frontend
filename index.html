@@ -81,7 +81,12 @@
                 <h2>🎥 Record Video</h2>
                 
                 <div id="recording-view" style="display: none;">
-                    <video id="record-video" class="video-preview" autoplay playsinline></video>
+                    <video id="record-video" class="video-preview" autoplay muted playsinline></video>
+                    <div class="live-feedback">
+                     <h3>🧘 Live Feedback</h3>
+                     <div id="live-feedback-list"></div>
+                    </div>
+
                     
                     <div class="recording-controls">
                         <button id="start-record-btn" class="btn btn-danger" onclick="startRecording()">
