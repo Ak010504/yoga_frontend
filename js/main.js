@@ -75,7 +75,7 @@ function stopCamera() {
 // WebSocket – Real-Time Correction
 // -------------------------------
 function startRealtimeCorrection() {
-  socket = new WebSocket("ws://localhost:8000/ws/realtime-correction");
+  socket = new WebSocket("wss://irresponsible-inga-semiallegorically.ngrok-free.dev/ws/realtime-correction");
 
   socket.onopen = () => {
     console.log("🟢 WebSocket connected");
