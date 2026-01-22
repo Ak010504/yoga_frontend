@@ -177,16 +177,32 @@ function renderLiveFeedback(feedbackArray) {
 // Pose Dropdown Init
 // -------------------------------
 async function loadPoses() {
-  const res = await fetch("https://irresponsible-inga-semiallegorically.ngrok-free.dev/api/poses");
-  const data = await res.json();
+  try {
+    const url = "https://irresponsible-inga-semiallegorically.ngrok-free.dev/api/poses";
+    console.log("Fetching poses from:", url);
 
-  data.poses.forEach(pose => {
-    const opt = document.createElement("option");
-    opt.value = pose;
-    opt.innerText = pose.replace("_", " ").toUpperCase();
-    poseDropdown.appendChild(opt);
-  });
+    const res = await fetch(url);
+
+    console.log("Status:", res.status);
+    console.log("Content-Type:", res.headers.get("content-type"));
+
+    const text = await res.text();
+    console.log("Raw response:", text);
+
+    const data = JSON.parse(text);
+
+    data.poses.forEach(pose => {
+      const opt = document.createElement("option");
+      opt.value = pose;
+      opt.innerText = pose.replace("_", " ").toUpperCase();
+      poseDropdown.appendChild(opt);
+    });
+
+  } catch (err) {
+    console.error("❌ loadPoses failed:", err);
+  }
 }
+
 
 loadPoses();
 
