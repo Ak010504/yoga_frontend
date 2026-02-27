@@ -15,6 +15,23 @@ const feedbackList = document.getElementById("feedback-list");
 const recordVideo = document.getElementById("record-video");
 const liveFeedbackList = document.getElementById("live-feedback-list");
 
+// ✅ ONLY NEW CODE: Phone TTS setup
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+let isSpeaking = false;
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+function speakOnPhone(text) {
+  if (!isMobile || !text || isSpeaking) return;
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.95; utt.volume = 1.0;
+  utt.onstart = () => { isSpeaking = true; };
+  utt.onend   = () => { isSpeaking = false; };
+  utt.onerror = () => { isSpeaking = false; };
+  window.speechSynthesis.speak(utt);
+}
 
 // -------------------------------
 // Screen Navigation (UNCHANGED)
@@ -50,10 +67,9 @@ async function startCamera() {
     });
 
     recordVideo.srcObject = videoStream;
-    recordVideo.muted = true;        // REQUIRED for autoplay
+    recordVideo.muted = true;
     await recordVideo.play();
 
-    // ✅ SHOW the camera preview
     document.getElementById("recording-view").style.display = "block";
 
     startRealtimeCorrection();
@@ -62,7 +78,6 @@ async function startCamera() {
     document.getElementById("permission-denied").style.display = "block";
   }
 }
-
 
 function stopCamera() {
   if (videoStream) {
@@ -82,31 +97,30 @@ function startRealtimeCorrection() {
     startFrameCapture();
   };
 
-  
   socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
+    const data = JSON.parse(event.data);
 
-  if (data.status === "feedback") {
-    renderLiveFeedback(data.feedback);
-  }
+    if (data.status === "feedback") {
+      renderLiveFeedback(data.feedback);
+      speakOnPhone(data.speak_text); // ✅ ONLY NEW LINE
+    }
 
-  if (data.status === "warming_up") {
-    renderLiveFeedback(["Analyzing posture…"]);
-  }
+    if (data.status === "warming_up") {
+      renderLiveFeedback(["Analyzing posture…"]);
+    }
 
-  if (data.status === "no_pose") {
-    renderLiveFeedback(["No pose detected"]);
-  }
-  if (data.status === "hold_still") {
-  renderLiveFeedback(["🧘 Hold still for a moment…"]);
-}
+    if (data.status === "no_pose") {
+      renderLiveFeedback(["No pose detected"]);
+    }
 
-  if (data.status === "warming_up") {
-    renderLiveFeedback([`Analyzing posture… (${data.frames} frames)`]);
-   }
+    if (data.status === "hold_still") {
+      renderLiveFeedback(["🧘 Hold still for a moment…"]);
+    }
 
-};
-
+    if (data.status === "warming_up") {
+      renderLiveFeedback([`Analyzing posture… (${data.frames} frames)`]);
+    }
+  };
 
   socket.onclose = () => {
     console.log("🔴 WebSocket closed");
@@ -172,7 +186,6 @@ function renderLiveFeedback(feedbackArray) {
   });
 }
 
-
 // -------------------------------
 // Pose Dropdown Init
 // -------------------------------
@@ -180,13 +193,11 @@ async function loadPoses() {
   try {
     const API_BASE = "https://irresponsible-inga-semiallegorically.ngrok-free.dev";
 
-    const res = await fetch( `${API_BASE}/api/poses`,
-      {
-    headers: {
-      "ngrok-skip-browser-warning": "true"
-    }
-  }
-    );
+    const res = await fetch(`${API_BASE}/api/poses`, {
+      headers: {
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
 
     console.log("Status:", res.status);
     console.log("Content-Type:", res.headers.get("content-type"));
@@ -207,7 +218,6 @@ async function loadPoses() {
     console.error("❌ loadPoses failed:", err);
   }
 }
-
 
 loadPoses();
 
@@ -310,10 +320,10 @@ async function analyzeRecordedVideo() {
     const API_BASE = "https://irresponsible-inga-semiallegorically.ngrok-free.dev";
     const res = await fetch(`${API_BASE}/api/process-video`, {
       method: "POST",
-      body: formData, 
+      body: formData,
       headers: {
-      "ngrok-skip-browser-warning": "true"
-    }
+        "ngrok-skip-browser-warning": "true"
+      }
     });
 
     const result = await res.json();
@@ -337,4 +347,3 @@ function showResults(result) {
   const video = document.getElementById("result-video");
   video.src = URL.createObjectURL(recordedBlob);
 }
-
