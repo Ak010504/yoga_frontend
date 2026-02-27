@@ -47,9 +47,15 @@ function showRecordScreen() {
     alert("Please select a pose first");
     return;
   }
+  if ('speechSynthesis' in window) {
+    const warmup = new SpeechSynthesisUtterance('');
+    window.speechSynthesis.speak(warmup);
+  }
   showScreen("record-screen");
   startCamera();
 }
+
+
 
 function backHome() {
   stopRealtime();
