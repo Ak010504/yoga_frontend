@@ -22,7 +22,7 @@ if ('speechSynthesis' in window) {
   window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
 }
 function speakOnPhone(text) {
-  if (!isMobile || !text || isSpeaking) return;
+  if ( !text || isSpeaking) return;
   if (!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(text);
